@@ -1,0 +1,102 @@
+[gd_scene load_steps=15 format=3 uid="uid://caifpcoo0h0py"]
+
+[ext_resource type="Texture2D" path="res://ok.png" id="1_7rovy"]
+[ext_resource type="ArrayMesh" path="res://icecomet.obj" id="2_xehuc"]
+[ext_resource type="Script" path="res://Icecomet2.gd" id="3_mw8ux"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_m01qs"]
+
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_fr72g"]
+rayleigh_color = Color(0, 0, 0, 1)
+mie_color = Color(0, 0, 0, 1)
+ground_color = Color(0.0509804, 0.0313726, 0.0117647, 1)
+
+[sub_resource type="Sky" id="Sky_wc0ar"]
+sky_material = SubResource("PhysicalSkyMaterial_fr72g")
+process_mode = 3
+
+[sub_resource type="Environment" id="Environment_5aeur"]
+background_mode = 2
+sky = SubResource("Sky_wc0ar")
+sky_rotation = Vector3(-0.329867, -3.19919, 0)
+ambient_light_source = 3
+reflected_light_source = 2
+tonemap_mode = 3
+ssr_enabled = true
+ssao_enabled = true
+ssil_enabled = true
+sdfgi_enabled = true
+glow_strength = 0.09
+glow_bloom = 0.34
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_uugcg"]
+frequency = 0.396
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ncrwj"]
+noise = SubResource("FastNoiseLite_uugcg")
+
+[sub_resource type="Gradient" id="Gradient_gtqym"]
+colors = PackedColorArray(0.655939, 0.873808, 1, 1, 0.156863, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_yxmj7"]
+seed = -80
+frequency = 0.0014
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_tw235"]
+in_3d_space = true
+seamless = true
+color_ramp = SubResource("Gradient_gtqym")
+noise = SubResource("FastNoiseLite_yxmj7")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sbmh4"]
+albedo_texture = ExtResource("1_7rovy")
+roughness = 0.3
+roughness_texture = ExtResource("1_7rovy")
+roughness_texture_channel = 2
+rim = 0.04
+rim_tint = 0.96
+rim_texture = SubResource("NoiseTexture2D_tw235")
+ao_texture = SubResource("NoiseTexture2D_ncrwj")
+heightmap_scale = 6.798
+heightmap_flip_binormal = true
+heightmap_texture = ExtResource("1_7rovy")
+heightmap_flip_texture = true
+subsurf_scatter_skin_mode = true
+subsurf_scatter_texture = ExtResource("1_7rovy")
+refraction_scale = 0.34
+uv1_triplanar_sharpness = 28.84
+texture_filter = 5
+grow_amount = 0.085
+use_point_size = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_rdrhs"]
+size = Vector2(500, 500)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, 0)
+visible = false
+mesh = SubResource("BoxMesh_m01qs")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.035)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_5aeur")
+
+[node name="Icecomet2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.216722, 0, 0.976233, 0, 1, 0, -0.976233, 0, 0.216722, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_sbmh4")
+mesh = ExtResource("2_xehuc")
+script = ExtResource("3_mw8ux")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.075104, -0.231595, 0.969909, -0.0067912, 0.972752, 0.231748, -0.997153, 0.0108183, -0.0746304, 0, 0, 0)
+light_indirect_energy = 0.785
+shadow_enabled = true
+shadow_blur = 3.02
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.525)
+mesh = SubResource("QuadMesh_rdrhs")
